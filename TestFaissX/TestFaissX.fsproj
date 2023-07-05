@@ -9,12 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="scripts\TestNugetPackage.fsx" />
     <None Include="Directory.Build.targets" />
     <Compile Include="Tests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
-
-  <ItemGroup />
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />

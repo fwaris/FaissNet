@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<!-- Only used to create Nuget package for FaissNet -->
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<PackageId>FaissNet</PackageId>
+		<Version>0.5.3</Version>
+		<Authors>Faisal Waris</Authors>
+		<Copyright>Faisal Waris © 2023 </Copyright>
+		<PackageTags>vector store;HNSW;nearest neighbors;KNN</PackageTags>
+		<Description>
+			Dotnet (c++/cli) wrapper over faisslib vector store (see https://github.com/facebookresearch/faiss).
+			Currently only available for windows x64.
+		</Description>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<None Include="..\LICENSE.txt">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+	
+	<ItemGroup>
+		<ProjectReference Include="..\FaissNet\FaissNet.vcxproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="$(ProjectDir)..\packages\intelmkl.redist.win-x64.2023.1.0.46356\runtimes\win-x64\native\**\*.dll">
+			<Pack>True</Pack>
+			<PackagePath>\runtimes\win-x64\native\</PackagePath>
+		</None>
+	</ItemGroup>
+	
+	<ItemGroup>
+		<None Include="$(ProjectDir)..\libs\*.dll">
+			<Pack>True</Pack>
+			<PackagePath>\runtimes\win-x64\native\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="FaissNet.props">
+			<Pack>True</Pack>
+			<PackagePath>\build\netstandard2.0</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="$(OutputPath)\FaissNet.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\$(TargetFramework)</PackagePath>
+		</Content>
+	</ItemGroup>
+
+</Project>
