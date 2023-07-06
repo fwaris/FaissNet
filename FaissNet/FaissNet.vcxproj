@@ -135,6 +135,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="IdMap.h" />
     <ClInclude Include="Index.h" />
     <ClInclude Include="IndexImpl.h" />
     <ClInclude Include="pch.h" />
@@ -142,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="IdMap.cpp" />
     <ClCompile Include="Index.cpp" />
     <ClCompile Include="IndexImpl.cpp" />
     <ClCompile Include="pch.cpp">

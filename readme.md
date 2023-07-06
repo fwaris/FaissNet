@@ -19,4 +19,6 @@ let nbrs,dists = idx1.Search([|v1|],1) //find neighbors
 idx1.Dispose()
 ```
 
+See TestFaissX project for example usage.
+
 

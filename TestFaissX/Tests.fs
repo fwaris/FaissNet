@@ -18,6 +18,25 @@ module TestUtils =
         idx.Add(data)
         Assert.True((sz=idx.Count()))
 
+    let addDataWithIdMap d (idx:FaissNet.Index) = 
+        let sz = 100
+        let data = randFloatArray d sz
+        let ids = randIdArray sz
+        use idMap = new FaissNet.IdMap(idx) 
+        idMap.AddWithIds(data,ids)
+        let d1 = data.[0..1]
+        let id1 = ids.[0..1]
+        let nbrIds,nbrVecs = idMap.Search(d1,1)
+        Assert.True((nbrIds.[0].[0]=id1.[0]))
+
+    ///should throw for base indexes
+    let addDataWithIds d (idx:FaissNet.Index) = 
+        let sz = 100
+        let data = randFloatArray d sz
+        let ids = randIdArray sz
+        //none of the indexes support id'ed insertions
+        Assert.Throws<System.Runtime.InteropServices.SEHException>(fun () -> idx.AddWithIds(data,ids)) 
+      
     let baseIndexTest d (idx:FaissNet.Index) =
         let sz = 100
         addData sz d idx
@@ -74,4 +93,40 @@ let IndexHSNWWriteTest() =
     let d = 64
     use idx = new FaissNet.IndexHNSWFlat(d,32,FaissNet.MetricType.METRIC_L2)
     TestUtils.indexSaveLoad<FaissNet.IndexHNSWFlat> d idx
+
+[<Fact>]
+let IndexFlatAddWithIdsTest() =
+    let d = 64
+    use idx = new FaissNet.IndexFlat(d,FaissNet.MetricType.METRIC_L2)
+    TestUtils.addDataWithIds d idx
+
+[<Fact>]
+let IndexFlatL2AddWithIdsTest() =
+    let d = 64
+    use idx = new FaissNet.IndexFlatL2(d,FaissNet.MetricType.METRIC_L2)
+    TestUtils.addDataWithIds d idx
+
+[<Fact>]
+let IndexHSNWAddWithIdsTest() =
+    let d = 64
+    use idx = new FaissNet.IndexHNSWFlat(d,32,FaissNet.MetricType.METRIC_L2)
+    TestUtils.addDataWithIds d idx
+
+[<Fact>]
+let IndexFlatAddWithIdMapTest() =
+    let d = 64
+    use idx = new FaissNet.IndexFlat(d,FaissNet.MetricType.METRIC_L2)
+    TestUtils.addDataWithIdMap d idx
+
+[<Fact>]
+let IndexFlatL2AddWithIdMapTest() =
+    let d = 64
+    use idx = new FaissNet.IndexFlatL2(d,FaissNet.MetricType.METRIC_L2)
+    TestUtils.addDataWithIdMap d idx
+
+[<Fact>]
+let IndexHSNWAddWithIdMapTest() =
+    let d = 64
+    use idx = new FaissNet.IndexHNSWFlat(d,32,FaissNet.MetricType.METRIC_L2)
+    TestUtils.addDataWithIdMap d idx
 

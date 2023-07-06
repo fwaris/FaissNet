@@ -132,22 +132,22 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\intelopenmp.redist.win.2023.0.0.25922\build\native\intelopenmp.redist.win.targets" Condition="Exists('..\packages\intelopenmp.redist.win.2023.0.0.25922\build\native\intelopenmp.redist.win.targets')" />
-    <Import Project="..\packages\intelopenmp.devel.win.2023.0.0.25922\build\native\intelopenmp.devel.win.targets" Condition="Exists('..\packages\intelopenmp.devel.win.2023.0.0.25922\build\native\intelopenmp.devel.win.targets')" />
-    <Import Project="..\packages\inteltbb.redist.win.2021.1.1.133\build\native\nuget\inteltbb.redist.win.targets" Condition="Exists('..\packages\inteltbb.redist.win.2021.1.1.133\build\native\nuget\inteltbb.redist.win.targets')" />
     <Import Project="..\packages\intelmkl.redist.win-x64.2023.1.0.46356\build\native\intelmkl.redist.win-x64.targets" Condition="Exists('..\packages\intelmkl.redist.win-x64.2023.1.0.46356\build\native\intelmkl.redist.win-x64.targets')" />
-    <Import Project="..\packages\inteltbb.devel.win.2021.1.1.133\build\native\nuget\inteltbb.devel.win.targets" Condition="Exists('..\packages\inteltbb.devel.win.2021.1.1.133\build\native\nuget\inteltbb.devel.win.targets')" />
     <Import Project="..\packages\intelmkl.devel.win-x64.2023.1.0.46356\build\native\intelmkl.devel.win-x64.targets" Condition="Exists('..\packages\intelmkl.devel.win-x64.2023.1.0.46356\build\native\intelmkl.devel.win-x64.targets')" />
+    <Import Project="..\packages\intelopenmp.redist.win.2023.1.0.46319\build\native\intelopenmp.redist.win.targets" Condition="Exists('..\packages\intelopenmp.redist.win.2023.1.0.46319\build\native\intelopenmp.redist.win.targets')" />
+    <Import Project="..\packages\intelopenmp.devel.win.2023.1.0.46319\build\native\intelopenmp.devel.win.targets" Condition="Exists('..\packages\intelopenmp.devel.win.2023.1.0.46319\build\native\intelopenmp.devel.win.targets')" />
+    <Import Project="..\packages\inteltbb.redist.win.2021.9.0.43574\build\native\inteltbb.redist.win.targets" Condition="Exists('..\packages\inteltbb.redist.win.2021.9.0.43574\build\native\inteltbb.redist.win.targets')" />
+    <Import Project="..\packages\inteltbb.devel.win.2021.9.0.43574\build\native\inteltbb.devel.win.targets" Condition="Exists('..\packages\inteltbb.devel.win.2021.9.0.43574\build\native\inteltbb.devel.win.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\intelopenmp.redist.win.2023.0.0.25922\build\native\intelopenmp.redist.win.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\intelopenmp.redist.win.2023.0.0.25922\build\native\intelopenmp.redist.win.targets'))" />
-    <Error Condition="!Exists('..\packages\intelopenmp.devel.win.2023.0.0.25922\build\native\intelopenmp.devel.win.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\intelopenmp.devel.win.2023.0.0.25922\build\native\intelopenmp.devel.win.targets'))" />
-    <Error Condition="!Exists('..\packages\inteltbb.redist.win.2021.1.1.133\build\native\nuget\inteltbb.redist.win.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\inteltbb.redist.win.2021.1.1.133\build\native\nuget\inteltbb.redist.win.targets'))" />
     <Error Condition="!Exists('..\packages\intelmkl.redist.win-x64.2023.1.0.46356\build\native\intelmkl.redist.win-x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\intelmkl.redist.win-x64.2023.1.0.46356\build\native\intelmkl.redist.win-x64.targets'))" />
-    <Error Condition="!Exists('..\packages\inteltbb.devel.win.2021.1.1.133\build\native\nuget\inteltbb.devel.win.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\inteltbb.devel.win.2021.1.1.133\build\native\nuget\inteltbb.devel.win.targets'))" />
     <Error Condition="!Exists('..\packages\intelmkl.devel.win-x64.2023.1.0.46356\build\native\intelmkl.devel.win-x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\intelmkl.devel.win-x64.2023.1.0.46356\build\native\intelmkl.devel.win-x64.targets'))" />
+    <Error Condition="!Exists('..\packages\intelopenmp.redist.win.2023.1.0.46319\build\native\intelopenmp.redist.win.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\intelopenmp.redist.win.2023.1.0.46319\build\native\intelopenmp.redist.win.targets'))" />
+    <Error Condition="!Exists('..\packages\intelopenmp.devel.win.2023.1.0.46319\build\native\intelopenmp.devel.win.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\intelopenmp.devel.win.2023.1.0.46319\build\native\intelopenmp.devel.win.targets'))" />
+    <Error Condition="!Exists('..\packages\inteltbb.redist.win.2021.9.0.43574\build\native\inteltbb.redist.win.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\inteltbb.redist.win.2021.9.0.43574\build\native\inteltbb.redist.win.targets'))" />
+    <Error Condition="!Exists('..\packages\inteltbb.devel.win.2021.9.0.43574\build\native\inteltbb.devel.win.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\inteltbb.devel.win.2021.9.0.43574\build\native\inteltbb.devel.win.targets'))" />
   </Target>
 </Project>
