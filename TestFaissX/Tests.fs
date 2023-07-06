@@ -29,7 +29,7 @@ module TestUtils =
         let nbrIds,nbrVecs = idMap.Search(d1,1)
         Assert.True((nbrIds.[0].[0]=id1.[0]))
 
-    ///should throw for base indexes
+    ///should throw for base indexes - need ot use IdMap
     let addDataWithIds d (idx:FaissNet.Index) = 
         let sz = 100
         let data = randFloatArray d sz

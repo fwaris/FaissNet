@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<PackageId>FaissNet</PackageId>
-		<Version>0.5.4</Version>
+		<Version>0.5.5</Version>
 		<Authors>Faisal Waris</Authors>
 		<Copyright>Faisal Waris © 2023 </Copyright>
 		<PackageTags>vector store;HNSW;nearest neighbors;KNN</PackageTags>
