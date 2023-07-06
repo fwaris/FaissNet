@@ -3,22 +3,29 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<PackageId>FaissNet</PackageId>
-		<Version>0.5.3</Version>
+		<Version>0.5.4</Version>
 		<Authors>Faisal Waris</Authors>
 		<Copyright>Faisal Waris © 2023 </Copyright>
 		<PackageTags>vector store;HNSW;nearest neighbors;KNN</PackageTags>
+		<RepositoryUrl>https://github.com/fwaris/FaissNet</RepositoryUrl>
 		<Description>
 			Dotnet (c++/cli) wrapper over faisslib vector store (see https://github.com/facebookresearch/faiss).
 			Currently only available for windows x64.
 		</Description>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
+		<PackageProjectUrl>https://github.com/fwaris/FaissNet</PackageProjectUrl>
 	</PropertyGroup>
 	
 	<ItemGroup>
 		<None Include="..\LICENSE.txt">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\readme.md">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
 	

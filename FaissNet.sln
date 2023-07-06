@@ -11,11 +11,17 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FaissDemo", "FaissDotnet\Fa
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "TestFaissX", "TestFaissX\TestFaissX.fsproj", "{73DA2C58-1B2F-459C-A656-BD8C7D9D5425}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaissNetPack", "FaissNetPack\FaissNetPack.csproj", "{343C8D99-6C61-402C-A727-529DA9DD37F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FaissNetPack", "FaissNetPack\FaissNetPack.csproj", "{343C8D99-6C61-402C-A727-529DA9DD37F2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{A5286A10-D741-48C2-8B6F-998FE2681C91}"
 	ProjectSection(SolutionItems) = preProject
+		libs\Ijwhost.dll = libs\Ijwhost.dll
 		libs\libiomp5md.dll = libs\libiomp5md.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{29D2EF26-E97F-4BC5-9C6D-DE0AD94056D3}"
+	ProjectSection(SolutionItems) = preProject
+		readme.md = readme.md
 	EndProjectSection
 EndProject
 Global
