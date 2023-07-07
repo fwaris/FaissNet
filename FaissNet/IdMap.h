@@ -1,19 +1,25 @@
 #pragma once
 #include "Index.h"
 #include <faiss/IndexIDMap.h>
+#include <faiss/impl/IDSelector.h>
 using namespace System;
 using namespace System::Runtime::InteropServices;
+using namespace System::Linq;
 
 namespace FaissNet {
+	/// <summary>
+	/// Provides a way of using external ids when adding, removing and searching with an underlying index.
+	/// Ensure that the underlying index is not disposed prior to the disposition of the IdMap
+	/// </summary>
 	public ref class IdMap {
 	private:
-		FaissNet::FaissSafeHandle<faiss::IndexIDMap>^ m_Impl;
+		FaissNet::FaissSafeHandle<faiss::IndexIDMap2>^ m_Impl;
 	protected:
-		faiss::IndexIDMap* h() { return m_Impl->Ptr(); }
+		faiss::IndexIDMap2* h() { return m_Impl->Ptr(); }
 	public:
-		IdMap(FaissNet::FaissSafeHandle<faiss::IndexIDMap>^ m_Impl) : m_Impl(m_Impl) {};
+		IdMap(FaissNet::FaissSafeHandle<faiss::IndexIDMap2>^ m_Impl) : m_Impl(m_Impl) {};
 		IdMap(FaissNet::Index^ idx) :
-			IdMap(gcnew FaissNet::FaissSafeHandle<faiss::IndexIDMap>(new faiss::IndexIDMap(idx->Handle()->Ptr()))) {};
+			IdMap(gcnew FaissNet::FaissSafeHandle<faiss::IndexIDMap2>(new faiss::IndexIDMap2(idx->Handle()->Ptr()))) {};
 
 		/// <summary>
 		/// Add vectors to database
@@ -60,6 +66,37 @@ namespace FaissNet {
 				pVec = nullptr;
 			}
 			return Tuple::Create(ids, dists);
+		}
+
+		/// <summary>
+		/// Reconstruct stored vectors (or approximations if lossy coding) for the given ids
+		/// </summary>
+		array<array<float>^>^ Reconstruct(array<long long>^ ids) {
+			auto s = ids->Length;
+			auto d = h()->d;
+			auto vectors = gcnew array<array<float>^>(s);
+			for (size_t i = 0; i < s; i++) {
+				auto locVec = gcnew array<float>(d);
+				vectors[i] = locVec;
+				pin_ptr<long long> pIds = &ids[i];
+				pin_ptr<float> pVec = &locVec[0];
+				h()->reconstruct_batch(1, (const long long*)pIds, pVec);
+				pIds = nullptr;
+				pVec = nullptr;
+			}
+			return vectors;
+		}
+
+		/// <summary>
+		/// Remove ids and corresponding vectors
+		/// </summary>
+		void Remove(array<long long>^ ids) {
+			auto s = ids->Length;
+			auto d = h()->d;
+			pin_ptr<long long> pIds = &ids[0];
+			auto sel = faiss::IDSelectorArray::IDSelectorArray(ids->Length, pIds);
+			h()->remove_ids(sel);
+			pIds = nullptr;
 		}
 
 		/// <summary>

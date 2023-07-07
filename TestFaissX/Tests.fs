@@ -29,7 +29,7 @@ module TestUtils =
         let nbrIds,nbrVecs = idMap.Search(d1,1)
         Assert.True((nbrIds.[0].[0]=id1.[0]))
 
-    ///should throw for base indexes - need ot use IdMap
+    ///should throw for base indexes - need to use IdMap
     let addDataWithIds d (idx:FaissNet.Index) = 
         let sz = 100
         let data = randFloatArray d sz
@@ -56,6 +56,21 @@ module TestUtils =
         FaissNet.Instance.WriteIndex(idx,fn)
         use idx2:'t = FaissNet.Instance.ReadIndex<'t>(fn)
         Assert.True((idx2.Count() = idx.Count()))
+
+    let addRemoveIds d (idx:FaissNet.Index) =
+        let sz = 100
+        let data = randFloatArray d sz
+        let ids = randIdArray sz
+        use idMap = new FaissNet.IdMap(idx) 
+        idMap.AddWithIds(data,ids)
+        let c1 = idx.Count()
+        let remIds = ids.[0..sz/2]
+        let vecs = idMap.Reconstruct(remIds[0..1]) // this should work
+        idMap.Remove(remIds)
+        let c2 = idx.Count()
+        Assert.True((c2 = c1 - remIds.Length))
+        //let tryRemove() = idMap.Reconstruct(remIds[0..1]) |> ignore               //this should fail as ids have been removed
+        //Assert.Throws<System.Runtime.InteropServices.SEHException>(tryRemove)     //causes problems with testing host
 
 [<Fact>]
 let IndexFlatTest() =
@@ -94,6 +109,8 @@ let IndexHSNWWriteTest() =
     use idx = new FaissNet.IndexHNSWFlat(d,32,FaissNet.MetricType.METRIC_L2)
     TestUtils.indexSaveLoad<FaissNet.IndexHNSWFlat> d idx
 
+(*
+//these trhow c++ exceptions which are not handled well by the testing infrastructure
 [<Fact>]
 let IndexFlatAddWithIdsTest() =
     let d = 64
@@ -111,6 +128,7 @@ let IndexHSNWAddWithIdsTest() =
     let d = 64
     use idx = new FaissNet.IndexHNSWFlat(d,32,FaissNet.MetricType.METRIC_L2)
     TestUtils.addDataWithIds d idx
+*)
 
 [<Fact>]
 let IndexFlatAddWithIdMapTest() =
@@ -130,3 +148,23 @@ let IndexHSNWAddWithIdMapTest() =
     use idx = new FaissNet.IndexHNSWFlat(d,32,FaissNet.MetricType.METRIC_L2)
     TestUtils.addDataWithIdMap d idx
 
+[<Fact>]
+let IndexFlatAddRemoveIdsTest() =
+    let d = 64
+    use idx = new FaissNet.IndexFlat(d,FaissNet.MetricType.METRIC_L2)
+    TestUtils.addRemoveIds d idx
+
+[<Fact>]
+let IndexFlatL2AddRemoveIdsTest() =
+    let d = 64
+    use idx = new FaissNet.IndexFlatL2(d,FaissNet.MetricType.METRIC_L2)
+    TestUtils.addRemoveIds d idx
+
+(*
+//removal not supported for HSNW
+[<Fact>]
+let IndexHSNWAddRemoveIdsTest() =
+    let d = 64
+    use idx = new FaissNet.IndexHNSWFlat(d,32,FaissNet.MetricType.METRIC_L2)
+    TestUtils.addRemoveIds d idx
+*)

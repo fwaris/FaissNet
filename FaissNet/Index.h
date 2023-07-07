@@ -1,5 +1,6 @@
 #pragma once
 #include <faiss/Index.h>
+#include <faiss/impl/IDSelector.h>
 using namespace System;
 using namespace System::Runtime::InteropServices;
 
@@ -160,6 +161,18 @@ namespace FaissNet {
 		/// </summary>
 		void Reset() {
 			h()->reset();
+		}
+
+		/// <summary>
+		/// Remove ids and corresponding vectors
+		/// </summary>
+		void Remove(array<long long>^ ids) {
+			auto s = ids->Length;
+			auto d = h()->d;
+			pin_ptr<long long> pIds = &ids[0];
+			auto sel = faiss::IDSelectorArray::IDSelectorArray(ids->Length, pIds);
+			h()->remove_ids(sel);
+			pIds = nullptr;
 		}
 
 		/// <summary>
