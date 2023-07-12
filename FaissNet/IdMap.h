@@ -7,19 +7,37 @@ using namespace System::Runtime::InteropServices;
 using namespace System::Linq;
 
 namespace FaissNet {
+	public delegate Index^ CreateIndex();
+
 	/// <summary>
 	/// Provides a way of using external ids when adding, removing and searching with an underlying index.
 	/// Ensure that the underlying index is not disposed prior to the disposition of the IdMap
 	/// </summary>
 	public ref class IdMap {
+
 	private:
 		FaissNet::FaissSafeHandle<faiss::IndexIDMap2>^ m_Impl;
+
 	protected:
 		faiss::IndexIDMap2* h() { return m_Impl->Ptr(); }
-	public:
-		IdMap(FaissNet::FaissSafeHandle<faiss::IndexIDMap2>^ m_Impl) : m_Impl(m_Impl) {};
+
 		IdMap(FaissNet::Index^ idx) :
 			IdMap(gcnew FaissNet::FaissSafeHandle<faiss::IndexIDMap2>(new faiss::IndexIDMap2(idx->Handle()->Ptr()))) {};
+
+		void SetOwnFields(bool val) { h()->own_fields = val; }
+
+	public:
+		IdMap(FaissNet::FaissSafeHandle<faiss::IndexIDMap2>^ m_Impl) : m_Impl(m_Impl) {};
+		IdMap(CreateIndex^ fac) :
+			IdMap(fac->Invoke()) {
+			(SetOwnFields(true));
+		};
+
+		MetricType MetricType() { auto v = h()->metric_type; return static_cast<FaissNet::MetricType>(v); }
+		bool IsTrained() { return h()->is_trained; }
+		int Dimension() { return h()->d; }
+		long Count() { return h()->ntotal; }
+		bool OwnFields(){ return h()->own_fields; }
 
 		/// <summary>
 		/// Add vectors to database
@@ -108,6 +126,10 @@ namespace FaissNet {
 			pin_ptr<const float> pVecs = &vectorsFlat[0];
 			h()->train(n, pVecs);
 			pVecs = nullptr;
+		}
+
+		FaissSafeHandle<faiss::IndexIDMap2>^ Handle() {
+			return m_Impl;
 		}
 
 		/// <summary>

@@ -82,7 +82,7 @@
     <IncludePath>E:\s\repos\faiss;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>E:\s\repos\faiss;$(IncludePath);$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>E:\s\repos\faiss;$(IncludePath);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -93,6 +93,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>"E:\s\repos\faiss\build\faiss\Debug\faiss.lib"</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /q /y "$(ProjectDir)\..\packages\intelmkl.redist.win-x64.2023.1.0.46356\runtimes\win-x64\native\*.dll" "$(TargetDir)"  </Command>
@@ -129,6 +130,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>"E:\s\repos\faiss\build\faiss\Release\faiss.lib"</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /q /y "$(ProjectDir)\..\packages\intelmkl.redist.win-x64.2023.1.0.46356\runtimes\win-x64\native\*.dll" "$(TargetDir)"  </Command>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net6.0-windows7.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
     <GenerateProgramFile>false</GenerateProgramFile>
@@ -11,7 +11,9 @@
   <ItemGroup>
     <None Include="scripts\TestNugetPackage.fsx" />
     <None Include="Directory.Build.targets" />
-    <Compile Include="Tests.fs" />
+    <Compile Include="TestUtils.fs" />
+    <Compile Include="IndexTests.fs" />
+    <Compile Include="IdMapTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

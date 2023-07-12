@@ -1,6 +1,7 @@
 #pragma once
 #include <vcclr.h>
 #include "Index.h"
+#include "IdMap.h"
 #include <faiss/Index.h>
 #include <faiss/IndexFlat.h>
 #include <faiss/index_io.h>
@@ -31,6 +32,23 @@ namespace FaissNet {
             auto args = gcnew array<Object^>(1);
             args[0] = iPdx;
             return static_cast<T>(Activator::CreateInstance(T::typeid, args));            
+        }
+
+        static void WriteIdMap(FaissNet::IdMap^ idx, String^ path) {
+            auto ip = Marshal::StringToHGlobalAnsi(path);            
+            auto p2 = static_cast<const char*>(ip.ToPointer());
+            faiss::write_index(static_cast<faiss::Index*>(idx->Handle()->Ptr()), p2 );
+            Marshal::FreeHGlobal(ip);
+        }
+
+        static IdMap^ ReadIdMap(String^ path) {
+            auto ip = Marshal::StringToHGlobalAnsi(path);            
+            auto p2 = static_cast<const char*>(ip.ToPointer());
+            auto idx = faiss::read_index(p2);
+            Marshal::FreeHGlobal(ip);
+            auto idIdx = static_cast<faiss::IndexIDMap2*>(idx);
+            auto h = gcnew FaissSafeHandle<faiss::IndexIDMap2>(idIdx);
+            return gcnew IdMap(h);
         }
 
     private:

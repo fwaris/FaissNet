@@ -1,12 +1,14 @@
 <Project>
   <!-- See https://aka.ms/dotnet/msbuild/customize for more details on customizing your build -->
 	<ItemGroup>
-		<MKLPackageDlls Include="$(ProjectDir)..\packages\intelmkl.redist.win-x64.2023.1.0.46356\runtimes\win-x64\native\**\*.dll"/>
+		<MKLCore Include="$(ProjectDir)..\packages\intelmkl.redist.win-x64.2023.1.0.46356\runtimes\win-x64\native\mkl_core.2.dll"/>
+		<MKLThreads Include="$(ProjectDir)..\packages\intelmkl.redist.win-x64.2023.1.0.46356\runtimes\win-x64\native\mkl_intel_thread.2.dll"/>
 		<OtherLibs Include="$(ProjectDir)..\libs\**\*.dll"/>
 	</ItemGroup>
 	<Target Name="CustomAfterBuildTarget" AfterTargets="Build">
       <Message Text="Copying MKL redist to output" Importance="high" />
-	  <Copy SourceFiles="@(MKLPackageDlls)" DestinationFolder="$(TargetDir)" />
+	  <Copy SourceFiles="@(MKLCore)" DestinationFolder="$(TargetDir)" />
+	  <Copy SourceFiles="@(MKLThreads)" DestinationFolder="$(TargetDir)" />
 	  <Copy SourceFiles="@(OtherLibs)" DestinationFolder="$(TargetDir)" />
   </Target>
 </Project>

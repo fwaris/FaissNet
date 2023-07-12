@@ -3,12 +3,12 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<PackageId>FaissNet</PackageId>
-		<Version>0.5.6</Version>
+		<Version>1.0</Version>
 		<Authors>Faisal Waris</Authors>
 		<Copyright>Faisal Waris © 2023 </Copyright>
 		<PackageTags>vector store;HNSW;nearest neighbors;KNN</PackageTags>
 		<RepositoryUrl>https://github.com/fwaris/FaissNet</RepositoryUrl>
-		<PackageReleaseNotes>Use IdMap2 for efficient retrieval. Expose additional faiss api surface to .Net</PackageReleaseNotes>
+		<PackageReleaseNotes>Save/load of IdMaps; Reduce package size</PackageReleaseNotes>
 		<Description>
 			Dotnet (c++/cli) wrapper over faisslib vector store (see https://github.com/facebookresearch/faiss).
 			Currently only available for windows x64.
@@ -35,7 +35,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="$(ProjectDir)..\packages\intelmkl.redist.win-x64.2023.1.0.46356\runtimes\win-x64\native\**\*.dll">
+		<None Include="$(ProjectDir)..\packages\intelmkl.redist.win-x64.2023.1.0.46356\runtimes\win-x64\native\mkl_intel_thread.2.dll">
+			<Pack>True</Pack>
+			<PackagePath>\runtimes\win-x64\native\</PackagePath>
+		</None>
+		<None Include="$(ProjectDir)..\packages\intelmkl.redist.win-x64.2023.1.0.46356\runtimes\win-x64\native\mkl_core.2.dll">
 			<Pack>True</Pack>
 			<PackagePath>\runtimes\win-x64\native\</PackagePath>
 		</None>
