@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<PackageId>FaissNet</PackageId>
-		<Version>1.0</Version>
+		<Version>1.1</Version>
 		<Authors>Faisal Waris</Authors>
 		<Copyright>Faisal Waris © 2023 </Copyright>
 		<PackageTags>vector store;HNSW;nearest neighbors;KNN</PackageTags>
@@ -61,6 +61,10 @@
 
 	<ItemGroup>
 		<Content Include="$(OutputPath)\FaissNet.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\$(TargetFramework)</PackagePath>
+		</Content>
+		<Content Include="$(OutputPath)\FaissNet.xml">
 			<Pack>true</Pack>
 			<PackagePath>lib\$(TargetFramework)</PackagePath>
 		</Content>

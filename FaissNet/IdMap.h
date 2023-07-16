@@ -28,9 +28,10 @@ namespace FaissNet {
 
 	public:
 		IdMap(FaissNet::FaissSafeHandle<faiss::IndexIDMap2>^ m_Impl) : m_Impl(m_Impl) {};
+
 		IdMap(CreateIndex^ fac) :
 			IdMap(fac->Invoke()) {
-			(SetOwnFields(true));
+			(SetOwnFields(false));
 		};
 
 		MetricType MetricType() { auto v = h()->metric_type; return static_cast<FaissNet::MetricType>(v); }

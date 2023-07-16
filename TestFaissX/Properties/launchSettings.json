@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TestFaissX": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="E:\s\repos\FaissNet\FaissNetNative\FaissNetNative\FaissNetNative.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="E:\s\repos\FaissNet\FaissNetNative\FaissNetNative\FaissNetNative.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\s\repos\FaissNet\FaissNetNative\FaissNetNative\Stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="E:\s\repos\FaissNet\FaissNetNative\FaissNetNative\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{F358D910-F57A-3944-B026-C108FF17F42C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{FD444D49-04DC-33A1-A4BA-8792B6561BDA}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

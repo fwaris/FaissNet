@@ -1,6 +1,8 @@
 #pragma once
 #include <faiss/Index.h>
 #include <faiss/impl/IDSelector.h>
+#include <faiss/impl/FaissException.h>
+
 using namespace System;
 using namespace System::Runtime::InteropServices;
 
@@ -52,7 +54,7 @@ namespace FaissNet {
 		}
 	};
 
-	public ref class Index abstract {
+	public ref class Index {
 	private:
 		FaissSafeHandle<faiss::Index>^ m_Impl;
 	protected:
@@ -73,8 +75,16 @@ namespace FaissNet {
 			{
 				array<float>^ v0 = vectors[i];
 				pin_ptr<const float> pv1 = &v0[0];
-				h()->add(1, (const float*)pv1);
-				pv1 = nullptr;
+				try {
+					h()->add(1, (const float*)pv1);
+				}
+				catch (const faiss::FaissException& ex) {
+					auto msg = gcnew System::String(ex.msg.c_str());
+					throw(gcnew System::Exception(msg));
+				}
+				finally {
+					pv1 = nullptr;
+				}
 			}
 		}
 
@@ -90,9 +100,17 @@ namespace FaissNet {
 				array<float>^ vI = vectors[i];
 				pin_ptr<float> pvI = &vI[0];
 				pin_ptr<long long> idxI = &ids[i];
-				h()->add_with_ids(1, (const float*)pvI, (const long long*)idxI);
-				pvI = nullptr;
-				idxI = nullptr;
+				try {
+					h()->add_with_ids(1, (const float*)pvI, (const long long*)idxI);
+				}
+				catch (const faiss::FaissException& ex) {
+					auto msg = gcnew System::String(ex.msg.c_str());
+					throw(gcnew System::Exception(msg));
+				}
+				finally {
+					pvI = nullptr;
+					idxI = nullptr;
+				}
 			}
 		}
 
@@ -107,20 +125,26 @@ namespace FaissNet {
 			auto d = this->Dimension();
 			auto ids = gcnew array<array<long long>^>(s);
 			auto dists = gcnew array<array<float>^>(s);
-			for (size_t i = 0; i < s; i++)
-			{
-				auto locIds = gcnew array<long long>(k);
-				auto locDists = gcnew array<float>(k);
-				auto locVec = vectors[i];
-				ids[i] = locIds;
-				dists[i] = locDists;
-				pin_ptr<long long> pIds = &locIds[0];
-				pin_ptr<float> pDists = &locDists[0];
-				pin_ptr<float> pVec = &locVec[0];
-				h()->search(1, (const float*)pVec, k, (float*)pDists, (long long*)pIds);
-				pIds = nullptr;
-				pDists = nullptr;
-				pVec = nullptr;
+			try {
+				for (size_t i = 0; i < s; i++)
+				{
+					auto locIds = gcnew array<long long>(k);
+					auto locDists = gcnew array<float>(k);
+					auto locVec = vectors[i];
+					ids[i] = locIds;
+					dists[i] = locDists;
+					pin_ptr<long long> pIds = &locIds[0];
+					pin_ptr<float> pDists = &locDists[0];
+					pin_ptr<float> pVec = &locVec[0];
+					h()->search(1, (const float*)pVec, k, (float*)pDists, (long long*)pIds);
+					pIds = nullptr;
+					pDists = nullptr;
+					pVec = nullptr;
+				}
+			}
+			catch (const faiss::FaissException& ex) {
+				auto msg = gcnew System::String(ex.msg.c_str());
+				throw(gcnew System::Exception(msg));
 			}
 			return Tuple::Create(ids, dists);
 		}
@@ -131,18 +155,24 @@ namespace FaissNet {
 		array<array<long long>^>^ Assign(long count, array<array<float>^>^ vectors, long k) {
 			auto s = vectors->Length;
 			auto ids = gcnew array<array<long long>^>(s);
-			for (size_t i = 0; i < s; i++)
-			{
-				auto locIds = gcnew array<long long>(k);
-				auto locVec = vectors[i];
-				ids[i] = locIds;
-				pin_ptr<float> pVec = &locVec[0];
-				pin_ptr<long long> pIds = &locIds[0];
-				h()->assign(1, (const float*)pVec, pIds);
-				pIds = nullptr;
-				pVec = nullptr;
-			}
 			return ids;
+			try {
+				for (size_t i = 0; i < s; i++)
+				{
+					auto locIds = gcnew array<long long>(k);
+					auto locVec = vectors[i];
+					ids[i] = locIds;
+					pin_ptr<float> pVec = &locVec[0];
+					pin_ptr<long long> pIds = &locIds[0];
+					h()->assign(1, (const float*)pVec, pIds);
+					pIds = nullptr;
+					pVec = nullptr;
+				}
+			}
+			catch (const faiss::FaissException& ex) {
+				auto msg = gcnew System::String(ex.msg.c_str());
+				throw(gcnew System::Exception(msg));
+			}
 		}
 
 		/// <summary>
@@ -152,8 +182,16 @@ namespace FaissNet {
 		/// <param name="vectorsFlat">is a flat array of n * dimensions floats</param>
 		void Train(long n, array<float>^ vectorsFlat) {
 			pin_ptr<const float> pVecs = &vectorsFlat[0];
-			h()->train(n, pVecs);
-			pVecs = nullptr;
+			try {
+				h()->train(n, pVecs);
+			}
+			catch (const faiss::FaissException& ex) {
+				auto msg = gcnew System::String(ex.msg.c_str());
+				throw(gcnew System::Exception(msg));
+			}
+			finally {
+				pVecs = nullptr;
+			}
 		}
 
 		/// <summary>
@@ -171,8 +209,16 @@ namespace FaissNet {
 			auto d = h()->d;
 			pin_ptr<long long> pIds = &ids[0];
 			auto sel = faiss::IDSelectorArray::IDSelectorArray(ids->Length, pIds);
-			h()->remove_ids(sel);
-			pIds = nullptr;
+			try {
+				h()->remove_ids(sel);
+			}
+			catch (const faiss::FaissException& ex) {
+				auto msg = gcnew System::String(ex.msg.c_str());
+				throw(gcnew System::Exception(msg));
+			}
+			finally {
+				pIds = nullptr;
+			}
 		}
 
 		/// <summary>
@@ -183,14 +229,20 @@ namespace FaissNet {
 			auto s = ids->Length;
 			auto d = this->Dimension();
 			auto vectors = gcnew array<array<float>^>(s);
-			for (size_t i = 0; i < s; i++){
-				auto locVec = gcnew array<float>(d);				
-				vectors[i] = locVec;				
-				pin_ptr<long long> pIds = &ids[i];
-				pin_ptr<float> pVec = &locVec[0];
-				h()->reconstruct_batch(1, (const long long*)pIds, pVec);
-				pIds = nullptr;
-				pVec = nullptr;
+			try {
+				for (size_t i = 0; i < s; i++){
+					auto locVec = gcnew array<float>(d);				
+					vectors[i] = locVec;				
+					pin_ptr<long long> pIds = &ids[i];
+					pin_ptr<float> pVec = &locVec[0];
+					h()->reconstruct_batch(1, (const long long*)pIds, pVec);
+					pIds = nullptr;
+					pVec = nullptr;
+				}
+			}
+			catch (const faiss::FaissException& ex) {
+				auto msg = gcnew System::String(ex.msg.c_str());
+				throw(gcnew System::Exception(msg));
 			}
 			return vectors;
 
@@ -200,7 +252,13 @@ namespace FaissNet {
 		///  size of the produced codes in bytes
 		/// </summary>
 		 long long SaCodeSize() {
-			 return h()->sa_code_size();
+			try {
+				return h()->sa_code_size();				
+			}
+			catch (const faiss::FaissException& ex) {
+				auto msg = gcnew System::String(ex.msg.c_str());
+				throw(gcnew System::Exception(msg));
+			}
 		}
 
 		/// <summary>
@@ -210,16 +268,22 @@ namespace FaissNet {
 			 auto s = vectors->Length;
 			 auto d = h()->sa_code_size();
 			 auto encdVecs = gcnew array<array<unsigned char>^>(s);
-			 for (size_t i = 0; i < s; i++)
-			 {
-				 auto locEncdVec = gcnew array<unsigned char> (d);
-				 encdVecs[i] = locEncdVec;
-				 auto locVec = vectors[i];				 
-				 pin_ptr<float> pVec = &locVec[0];
-				 pin_ptr<unsigned char> pEncdVec = &locEncdVec[0];				 
-				 h()->sa_encode(1, (const float*)pVec, pEncdVec);
-				 pEncdVec = nullptr;
-				 pVec = nullptr;
+			 try {
+				 for (size_t i = 0; i < s; i++)
+				 {
+					 auto locEncdVec = gcnew array<unsigned char> (d);
+					 encdVecs[i] = locEncdVec;
+					 auto locVec = vectors[i];				 
+					 pin_ptr<float> pVec = &locVec[0];
+					 pin_ptr<unsigned char> pEncdVec = &locEncdVec[0];				 
+					 h()->sa_encode(1, (const float*)pVec, pEncdVec);
+					 pEncdVec = nullptr;
+					 pVec = nullptr;
+				 }
+			 }
+			 catch (const faiss::FaissException& ex) {
+				 auto msg = gcnew System::String(ex.msg.c_str());
+				 throw(gcnew System::Exception(msg));
 			 }
 			 return encdVecs;
 		}
@@ -231,17 +295,23 @@ namespace FaissNet {
 			 auto s = encdVecs->Length;
 			 auto d = this->Dimension();
 			 auto vectors = gcnew array<array<float>^>(s);
-			 for (size_t i = 0; i < s; i++)
-			 {
-				 auto locVec = gcnew array<float> (d);
-				 auto locEndVec = encdVecs[i];
-				 vectors[i] = locVec;
-				 pin_ptr<float> pVec = &locVec[0];
-				 pin_ptr<unsigned char> pEncdVec = &locEndVec[0];
-				 h()->sa_decode(1, (const unsigned char*)pEncdVec, pVec);
-				 pVec = nullptr;
-				 pEncdVec = nullptr;
-			 }
+			try {
+				 for (size_t i = 0; i < s; i++)
+				 {
+					 auto locVec = gcnew array<float> (d);
+					 auto locEndVec = encdVecs[i];
+					 vectors[i] = locVec;
+					 pin_ptr<float> pVec = &locVec[0];
+					 pin_ptr<unsigned char> pEncdVec = &locEndVec[0];
+					 h()->sa_decode(1, (const unsigned char*)pEncdVec, pVec);
+					 pVec = nullptr;
+					 pEncdVec = nullptr;
+				 }
+			}
+			catch (const faiss::FaissException& ex) {
+				auto msg = gcnew System::String(ex.msg.c_str());
+				throw(gcnew System::Exception(msg));
+			}
 			 return vectors;
 		}
 

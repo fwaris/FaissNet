@@ -90,6 +90,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
     </ClCompile>
     <Link>
       <AdditionalDependencies>"E:\s\repos\faiss\build\faiss\Debug\faiss.lib"</AdditionalDependencies>
@@ -127,6 +128,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
     </ClCompile>
     <Link>
       <AdditionalDependencies>"E:\s\repos\faiss\build\faiss\Release\faiss.lib"</AdditionalDependencies>
@@ -137,17 +139,17 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="IdMap.h" />
+    <ClInclude Include="Factory.h" />
     <ClInclude Include="Index.h" />
-    <ClInclude Include="IndexImpl.h" />
+    <ClInclude Include="Instance.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
-    <ClCompile Include="IdMap.cpp" />
+    <ClCompile Include="Factory.cpp" />
     <ClCompile Include="Index.cpp" />
-    <ClCompile Include="IndexImpl.cpp" />
+    <ClCompile Include="Instance.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

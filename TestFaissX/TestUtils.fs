@@ -43,6 +43,6 @@ let indexSaveLoad<'t when 't :> FaissNet.Index> d (idx:FaissNet.Index) =
     addData sz d idx
     let fn = Path.GetTempFileName()
     FaissNet.Instance.WriteIndex(idx,fn)
-    use idx2:'t = FaissNet.Instance.ReadIndex<'t>(fn)
+    use idx2 = FaissNet.Instance.ReadIndex(fn)
     Assert.True((idx2.Count() = idx.Count()))
 
