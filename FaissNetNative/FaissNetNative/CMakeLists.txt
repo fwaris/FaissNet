@@ -35,9 +35,13 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
 endif()
 
 set(config $<IF:$<CONFIG:Debug>,Debug,Release>)
+#set(isDebug $<IF:$<CONFIG:Debug>,Debug,>)
 set(targetfile ${CMAKE_CURRENT_SOURCE_DIR}/../../x64/${config}/$<TARGET_FILE_NAME:FaissNetNative>)
+#set(pdbfile ${CMAKE_CURRENT_SOURCE_DIR}/../../x64/${config}/$<TARGET_PDB_FILE_NAME:FaissNetNative>)
 
 add_custom_command(TARGET FaissNetNative POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:FaissNetNative> ${targetfile}
 )
+
+
 # TODO: Add tests and install targets if needed.

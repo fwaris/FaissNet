@@ -3,13 +3,25 @@ module IndexTests
 open System
 open System.IO
 open Xunit
-()
 
-//[<Fact>]
-//let IndexFlatTest() =
-//    let d = 64
-//    use idx = new FaissNet.IndexFlat(d,FaissNet.MetricType.METRIC_L2)
-//    TestUtils.baseIndexTest d idx        
+let DIM = 1536
+
+[<Fact>]
+let IndexAddWithIds() =
+    let d = DIM
+    use idx = FaissNet.Index.CreateDefault(d,FaissNet.MetricType.METRIC_L2)
+    let data = TestUtils.randFloatArray d 100
+    let ids = TestUtils.randIdArray 100
+    idx.AddWithIds(data,ids)
+    Assert.True(true)
+
+[<Fact>]
+let IndexTestAdd() =
+    let d = DIM
+    use idx = FaissNet.Index.CreateDefault(d,FaissNet.MetricType.METRIC_L2)
+    let data = TestUtils.randFloatArray d 100
+    idx.Add(data);
+    Assert.True(true)
 
 //[<Fact>]
 //let IndexFlatL2Test() =

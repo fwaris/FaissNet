@@ -29,10 +29,6 @@
 		  <PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
-	
-	<ItemGroup>
-		<ProjectReference Include="..\FaissNet\FaissNet.vcxproj" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="$(ProjectDir)..\packages\intelmkl.redist.win-x64.2023.1.0.46356\runtimes\win-x64\native\mkl_intel_thread.2.dll">

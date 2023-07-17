@@ -6,9 +6,12 @@
 
 using namespace std;
 
-EXPORT_API(void*) FN_Create(int dimension, const char* description, faiss::MetricType metric) {
-    faiss::Index* index = faiss::index_factory(dimension, description, metric);
-    return index;
+
+EXPORT_API(void*) FN_Create(int dimension, const char* description, faiss::MetricType metric)  noexcept(false) {
+    FN_CATCH(
+        faiss::Index* index = faiss::index_factory(dimension, description, metric);
+        return index;
+    )
 }
 
 EXPORT_API(void*) FN_CreateDefault(int dimension, faiss::MetricType metric)
@@ -26,14 +29,16 @@ EXPORT_API(void*) FN_ReadIndex(const char* path)
     return faiss::read_index(path);
 }
 
-EXPORT_API(void) FN_Add(faiss::Index* idx, int n, const float* x)
+EXPORT_API(void) FN_Add(faiss::Index* idx, int n, const float* x) noexcept(false)
 {
-    idx->add(n, x);
+    FN_CATCH(idx->add(n, x);)
 }
 
-EXPORT_API(void) FN_AddWithIds(faiss::Index* idx, int n, const float* x, const long long* ids)
+EXPORT_API(void) FN_AddWithIds(faiss::Index* idx, int n, const float* x, const long long* ids) noexcept(false)
 {
-    idx->add_with_ids(n, x, ids);
+    FN_CATCH(
+        idx->add_with_ids(n, x, ids);
+    )
 }
 
 EXPORT_API(void) FN_Search(faiss::Index* idx, int n, const float* x, int k, float* distances, long long* labels)
@@ -77,3 +82,27 @@ EXPORT_API(void) FN_MergeFrom(faiss::Index* idx, faiss::Index* otherIndex, long 
     idx->merge_from(*otherIndex, add_id);
 }
 
+EXPORT_API(void) FN_Release(faiss::Index* idx)
+{
+    delete(idx);
+}
+
+EXPORT_API(int) FN_Dimension(faiss::Index* idx)
+{
+    return idx->d;
+}
+
+EXPORT_API(faiss::MetricType) FN_MetricType(faiss::Index* idx)
+{
+    return idx->metric_type;
+}
+
+EXPORT_API(faiss::idx_t) FN_Count(faiss::Index* idx)
+{
+    return idx->ntotal;
+}
+
+EXPORT_API(const char*) FN_GetLastError()
+{
+    return LastError.c_str();
+}
