@@ -20,8 +20,7 @@ let IndexTestAdd() =
     let d = DIM
     use idx = FaissNet.Index.CreateDefault(d,FaissNet.MetricType.METRIC_L2)
     let data = TestUtils.randFloatArray d 100
-    idx.Add(data);
-    Assert.True(true)
+    Assert.Throws<Exception>(fun () ->     idx.Add(data);) //need to use add with ids for IndexIdMap wrapped indexes
 
 //[<Fact>]
 //let IndexFlatL2Test() =

@@ -4,7 +4,7 @@
 		<MKLCore Include="$(ProjectDir)..\packages\intelmkl.redist.win-x64.2023.1.0.46356\runtimes\win-x64\native\mkl_core.2.dll"/>
 		<MKLThreads Include="$(ProjectDir)..\packages\intelmkl.redist.win-x64.2023.1.0.46356\runtimes\win-x64\native\mkl_intel_thread.2.dll"/>
 		<OtherLibs Include="$(ProjectDir)..\libs\**\*.dll"/>
-		<FaissNetNative Include="$(ProjectDir)..\x64\$(Configuration)\FaissNetNative.dll"/>
+		<FaissNetNative Include="$(ProjectDir)..\x64\win-x64\$(Configuration)\bin\FaissNetNative.dll"/>
 	</ItemGroup>
 	<Target Name="CustomAfterBuildTarget" AfterTargets="Build">
       <Message Text="Copying MKL redist to output" Importance="high" />

@@ -73,13 +73,13 @@ namespace FaissNet
         unsafe internal static extern void FN_AddWithIds(IntPtr idx, int n, float* x, long * ids);
         
         [DllImport("FaissNetNative", SetLastError=true)]
-        internal static extern void FN_Search(IntPtr idx, int n, IntPtr x, int k, IntPtr distances, IntPtr labels);
+        unsafe internal static extern void FN_Search(IntPtr idx, int n, float * x, int k, float* distances, long* labels);
         
         [DllImport("FaissNetNative", SetLastError=true)]
-        internal static extern void FN_Assign(IntPtr idx, int n, IntPtr x, IntPtr labels, int k);
+        unsafe internal static extern void FN_Assign(IntPtr idx, int n, float* x, long* labels, int k);
         
         [DllImport("FaissNetNative", SetLastError=true)]
-        internal static extern void FN_Train(IntPtr idx, int n, IntPtr x);
+        unsafe internal static extern void FN_Train(IntPtr idx, int n, float* x);
         
         [DllImport("FaissNetNative", SetLastError=true)]
         internal static extern void FN_Reset(IntPtr idx);
@@ -88,10 +88,10 @@ namespace FaissNet
         internal static extern void FN_RemoveIds(IntPtr idx, int n, IntPtr ids);
         
         [DllImport("FaissNetNative", SetLastError=true)]
-        internal static extern void FN_ReconstructBatch(IntPtr idx, int n, IntPtr ids, IntPtr recons);
+        unsafe internal static extern void FN_ReconstructBatch(IntPtr idx, int n, long* ids, float* recons);
         
         [DllImport("FaissNetNative", SetLastError=true)]
-        internal static extern void FN_SearchAndReconstruct(IntPtr idx, int n, IntPtr x, int k, IntPtr distances, IntPtr labels, IntPtr recons);
+        unsafe internal static extern void FN_SearchAndReconstruct(IntPtr idx, int n, float* x, int k, float* distances, long* labels, float* recons);
         
         [DllImport("FaissNetNative", SetLastError=true)]
         internal static extern void FN_MergeFrom(IntPtr idx, IntPtr otherIndex, Int64 add_id);
