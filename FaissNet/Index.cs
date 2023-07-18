@@ -80,7 +80,8 @@ namespace FaissNet
             }
             else
             {
-                try { return Marshal.PtrToStringAnsi(ptr); } catch { return "unkown error"; }
+                try { return Marshal.PtrToStringAnsi(ptr); } 
+                catch { return "unable to retrieve error information"; }
             }
         }
 
@@ -355,20 +356,35 @@ namespace FaissNet
                 }
             });
             return ids;
-        }        
+        }
 
-        public void RemoveIds(long[] ids) 
+        public void RemoveIds(long[] ids)
         {
             Do(() =>
             {
                 var idsSpan = new ReadOnlySpan<long>(ids);
                 unsafe
                 {
-                    fixed(long* ptrIds = idsSpan)
+                    fixed (long* ptrIds = idsSpan)
                     {
                         FN_RemoveIds(this.handle.Pointer, ids.Length, ptrIds);
                     }
                 }
+            });
+        }
+
+        /// <summary>
+        /// Merge data from the other index into here
+        /// The other index is drained and becomes emtpy.
+        /// May not be implemented for some index types.
+        /// </summary>
+        /// <param name="otherIndex">other index</param>
+        /// <param name="add_id">add this to the id of each element of the other index</param>
+        public void MergeFrom(Index otherIndex,long add_id=0L)
+        {
+            Do(() =>
+            {
+                FN_MergeFrom(this.handle.Pointer, otherIndex.handle.Pointer, add_id);
             });
         }
     }

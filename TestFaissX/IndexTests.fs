@@ -11,9 +11,9 @@ let addWithIds() =
     let d = DIM
     use idx = FaissNet.Index.CreateDefault(d,FaissNet.MetricType.METRIC_L2)
     let data = TestUtils.randFloatArray d 100
-    let ids = TestUtils.randIdArray 100
+    let ids = TestUtils.genIds 100
     idx.AddWithIds(data,ids)
-    Assert.True(true)
+    Assert.True((idx.Count = int64 ids.Length))
 
 [<Fact>]
 let add() =
@@ -28,7 +28,7 @@ let searchFlat() =
     let sz = 100
     use idx = FaissNet.Index.CreateDefault(d,FaissNet.MetricType.METRIC_L2)
     let data = TestUtils.randFloatArrayFlat d sz
-    let ids = TestUtils.randIdArray sz
+    let ids = TestUtils.genIds sz
     idx.AddWithIdsFlat(sz,data,ids)
     let lookupSz = 1
     let k = 3
@@ -42,7 +42,7 @@ let search() =
     let sz = 100
     use idx = FaissNet.Index.CreateDefault(d,FaissNet.MetricType.METRIC_L2)
     let data = TestUtils.randFloatArray d sz
-    let ids = TestUtils.randIdArray sz
+    let ids = TestUtils.genIds sz
     idx.AddWithIds(data,ids)
     let lookupSz = 1
     let k = 3
@@ -57,7 +57,7 @@ let removeIdsDefaultIndex() =
     let sz = 100
     use idx = FaissNet.Index.CreateDefault(d,FaissNet.MetricType.METRIC_L2)
     let data = TestUtils.randFloatArray d sz
-    let ids = TestUtils.randIdArray sz
+    let ids = TestUtils.genIds sz
     idx.AddWithIds(data,ids)
     let c1 = idx.Count
     let idsToRemove = ids.[0..ids.Length/2]
@@ -69,7 +69,7 @@ let removeIdsBaseIndex() =
     let sz = 100
     use idx = FaissNet.Index.Create(d,"IDMap,Flat",FaissNet.MetricType.METRIC_L2)
     let data = TestUtils.randFloatArray d sz
-    let ids = TestUtils.randIdArray sz
+    let ids = TestUtils.genIds sz
     idx.AddWithIds(data,ids)
     let c1 = idx.Count
     let idsToRemove = ids.[0..ids.Length/2]
@@ -83,7 +83,7 @@ let assign() =
     let sz = 100
     use idx = FaissNet.Index.CreateDefault(d,FaissNet.MetricType.METRIC_L2)
     let data = TestUtils.randFloatArrayFlat d sz
-    let ids = TestUtils.randIdArray sz
+    let ids = TestUtils.genIds sz
     idx.AddWithIdsFlat(sz,data,ids)
     let k = 5
     let topVecs = data |> Seq.chunkBySize d |> Seq.take k |> Seq.collect id |> Seq.toArray
@@ -98,74 +98,48 @@ let searchAndReconstruct() =
     let sz = 100
     use idx = FaissNet.Index.CreateDefault(d,FaissNet.MetricType.METRIC_L2)
     let data = TestUtils.randFloatArrayFlat d sz
-    let ids = TestUtils.randIdArray sz
+    let ids = TestUtils.genIds sz
     idx.AddWithIdsFlat(sz,data,ids)
     let k = 5
     let topVecs = data |> Seq.chunkBySize d |> Seq.take k |> Seq.collect id |> Seq.toArray
     let topVecIds = ids.[0..k-1]
     let nDists,nIds,nVecs = idx.SearchAndReconstruct(k,topVecs,1)
     Assert.True((topVecIds=nIds))
-    Assert.True((nVecs = topVecs))
-
-
-//[<Fact>]
-//let IndexFlatL2Test() =
-//    let d = 64
-//    use idx = new FaissNet.IndexFlatL2(d,FaissNet.MetricType.METRIC_L2)
-//    TestUtils.baseIndexTest d idx        
-
-//[<Fact>]
-//let IndexHSNWTest() =
-//    let d = 64
-//    use idx = new FaissNet.IndexHNSWFlat(d,32,FaissNet.MetricType.METRIC_L2)
-//    TestUtils.baseIndexTest d idx        
-
-
-//[<Fact>]
-//let IndexFlatWriteTest() =
-//    let d = 64
-//    use idx = new FaissNet.IndexFlat(d,FaissNet.MetricType.METRIC_L2)
-//    TestUtils.indexSaveLoad<FaissNet.IndexFlat> d idx
-
-//[<Fact>]
-//let IndexFlatL2WriteTest() =
-//    let d = 64
-//    use idx = new FaissNet.IndexFlatL2(d,FaissNet.MetricType.METRIC_L2)
-//    TestUtils.indexSaveLoad<FaissNet.IndexFlatL2> d idx
-
-//[<Fact>]
-//let IndexHSNWWriteTest() =
-//    let d = 64
-//    use idx = new FaissNet.IndexHNSWFlat(d,32,FaissNet.MetricType.METRIC_L2)
-//    TestUtils.indexSaveLoad<FaissNet.IndexHNSWFlat> d idx
-
-(*
-//these throw c++ exceptions which are not handled well by the testing infrastructure
-[<Fact>]
-let IndexFlatAddWithIdsTest() =
-    let d = 64
-    use idx = new FaissNet.IndexFlat(d,FaissNet.MetricType.METRIC_L2)
-    TestUtils.addDataWithIds d idx
+    Assert.True((nVecs = topVecs)) //this may not hold for all index types
 
 [<Fact>]
-let IndexFlatL2AddWithIdsTest() =
-    let d = 64
-    use idx = new FaissNet.IndexFlatL2(d,FaissNet.MetricType.METRIC_L2)
-    TestUtils.addDataWithIds d idx
+let indexSaveLoad()=
+    let sz = 100
+    let d = DIM
+    let sz = 100
+    use idx = FaissNet.Index.CreateDefault(d,FaissNet.MetricType.METRIC_L2)
+    let data = TestUtils.randFloatArrayFlat d sz
+    let ids = TestUtils.genIds sz
+    idx.AddWithIdsFlat(sz,data,ids)
+    let fn = Path.GetTempFileName()
+    idx.Save(fn)
+    let idx2 = FaissNet.Index.Load(fn)
+    Assert.True((idx.Count = idx2.Count))
 
 [<Fact>]
-let IndexHSNWAddWithIdsTest() =
-    let d = 64
-    use idx = new FaissNet.IndexHNSWFlat(d,32,FaissNet.MetricType.METRIC_L2)
-    TestUtils.addDataWithIds d idx
-*)
+let indexMerge()=
+    let sz = 100
+    let d = DIM
+    let sz = 100
+    use idx1 = FaissNet.Index.Create(d,"IDMap,Flat",FaissNet.MetricType.METRIC_L2)
+    use idx2 = FaissNet.Index.Create(d,"IDMap,Flat",FaissNet.MetricType.METRIC_L2)
 
+    let data1 = TestUtils.randFloatArrayFlat d sz
+    let ids1 = TestUtils.genIds sz
+    idx1.AddWithIdsFlat(sz,data1,ids1)
 
-(*
-//removal not supported for HSNW
-[<Fact>]
-let IndexHSNWAddRemoveIdsTest() =
-    let d = 64
-    use idx = new FaissNet.IndexHNSWFlat(d,32,FaissNet.MetricType.METRIC_L2)
-    TestUtils.addRemoveIds d idx
-*)
+    let data2 = TestUtils.randFloatArrayFlat d sz
+    let ids2 = TestUtils.genIds sz
+    idx2.AddWithIdsFlat(sz,data2,ids2)
+
+    let c1 = idx1.Count
+    let c2 = idx2.Count
+    idx1.MergeFrom(idx2)
+    let c3 = idx1.Count
+    Assert.True((c3 = c1 + c2))
+    Assert.True((idx2.Count = 0L))
