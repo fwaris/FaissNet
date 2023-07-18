@@ -85,7 +85,7 @@ namespace FaissNet
         internal static extern void FN_Reset(IntPtr idx);
         
         [DllImport("FaissNetNative", SetLastError=true)]
-        internal static extern void FN_RemoveIds(IntPtr idx, int n, IntPtr ids);
+        unsafe internal static extern void FN_RemoveIds(IntPtr idx, int n, long* ids);
         
         [DllImport("FaissNetNative", SetLastError=true)]
         unsafe internal static extern void FN_ReconstructBatch(IntPtr idx, int n, long* ids, float* recons);

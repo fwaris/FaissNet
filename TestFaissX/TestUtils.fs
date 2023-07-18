@@ -6,6 +6,7 @@ open Xunit
 
 let rng = System.Random()
 let randFloatArray d sz = [|0..sz-1|] |> Array.map(fun i -> Array.init d (fun i -> rng.NextSingle() ))
+let randFloatArrayFlat d sz = [|for _ in 0 .. (d*sz)-1 -> rng.NextSingle() |]
 let randIdArray sz = [|0..sz-1|] |> Array.map(fun i -> rng.NextInt64())
 
 //let addData sz d (idx:FaissNet.Index) = 

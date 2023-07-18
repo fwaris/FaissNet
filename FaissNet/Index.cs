@@ -113,7 +113,7 @@ namespace FaissNet
 
         #endregion
 
-        public Int64 Count { get { return Run<long>(() => FN_Dimension(this.handle.Pointer)); } }
+        public Int64 Count { get { return Run<long>(() => FN_Count(this.handle.Pointer)); } }
         public MetricType MetricType { get { return Run<MetricType>(() => FN_MetricType(this.handle.Pointer)); } }
         public int Dimension { get { return Run<int>(() => FN_Dimension(this.handle.Pointer)); } }
 
@@ -340,7 +340,7 @@ namespace FaissNet
         /// <returns>vector of size n containing the associated ids</returns>
         public long[] Assign(int n, float[] vectors)
         {   
-            var ids = new long[n*this.Dimension];
+            var ids = new long[n];
             Do(() =>
             {
                 var vecSpan = new ReadOnlySpan<float>(vectors);
@@ -356,5 +356,20 @@ namespace FaissNet
             });
             return ids;
         }        
+
+        public void RemoveIds(long[] ids) 
+        {
+            Do(() =>
+            {
+                var idsSpan = new ReadOnlySpan<long>(ids);
+                unsafe
+                {
+                    fixed(long* ptrIds = idsSpan)
+                    {
+                        FN_RemoveIds(this.handle.Pointer, ids.Length, ptrIds);
+                    }
+                }
+            });
+        }
     }
 }
