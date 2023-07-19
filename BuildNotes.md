@@ -1,16 +1,17 @@
 # FaissNet Build
 
 ## Requirements
-- Visual Studio with C++/ClI support to build FaissNet project.
-- Intel oneAPI with Visual Studio support to link against MKL.
+- Visual Studio with C++/cmake support to build FaissNetNative project.
+- Intel oneAPI for MKL support
 - Visual Studio Build Tools with C++ support (for faiss.lib)
 
 ## Build faissLib
 Clone faiss (https://github.com/facebookresearch/faiss).
 
-Restore packages for solution so that the MLK nuget package - referenced by the MklHook project - is downloaded.
+Restore packages for the 'FaissNet' Visual Studio solution so that the MLK nuget package - referenced by the MklHook project - is downloaded.
+Do this before building faiss.lib.
 
-Open a 'Native Tools' command prompt and cd to faiss repo. 
+Open a 'Native Tools' command prompt and cd to the faiss repo. 
 Set the MKL_PATH variable in the script below to point to the 'redist' 'native' folder under the downloaded MKL nuget package,
 and execute it from the Native Tools prompt.
 
@@ -21,18 +22,25 @@ cmake -Wno-dev -DFAISS_ENABLE_GPU=OFF -DFAISS_ENABLE_PYTHON=OFF -DFAISS_ENABLE_C
 
 cmake --build build --config Release --target faiss
 cmake --build build --config Debug --target faiss
-
 ```
+The faiss.lib outputs should be in *'[faiss repo]/build/faiss/[Debug | Release]'* folders.
 
-The faiss.lib outputs should be in '<faiss repo>/build/faiss/[Debug | Release]' folders.
+## Build FaissNetNative (Windows)
+FaissNetNative is a Visual Studio c++ 'cmake' project. 
 
-## Build FaissNet
-Ensure that FaissNet Visuals Studio project has the correct paths to the faiss header files and links to the faiss.lib files
-for both debug and release configurations.
+Open the folder *'[FaissNet repo directory]/FaissNetNative'* in Visual Studio.
+Review and update the paths for FAISS_DIR, MKL_DIR, MKL_INC in *'/FaissNetNative/CMakeLists.txt*. 
+Note: This is **not** the CMakeLists.txt in the project directory root.
 
-Build FaissNet and run TestFaissX.
+In Solution Explorer switch to "CMake Targets View" using the context menu. In the 'targets view', use the context menu again to:
+
+- 'Build all' FaissNetNative
+- 'Install' FaissNetNative (this copies the output to a location for nuget packaging)
+
+### FassNetNative for other platforms
+Since FaissNetNative is a 'cmake' project, it can be built for MACOS and Linux, also. Please see Visual Studio cmake documentation for details.
 
 ## Nuget Package
-In Visual Studio, right-click on 'FaissNetPack' project and select 'Pack' (or use the appropriate dotnet pack command)
+In Visual Studio, right-click on 'FaissNet' project and select 'Pack' (or use the appropriate dotnet pack command)
 
 

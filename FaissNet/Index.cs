@@ -1,17 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FaissNet
 {
     using static FaissNetNative;
 
+    /// <summary>
+    /// Wrapper for the faiss vector store library.
+    /// See <see href="https://github.com/facebookresearch/faiss/wiki">faiss wiki</see>
+    /// for the comprehensive documentation.
+    /// </summary>
     public class Index : IDisposable
     {
         IndexHandle handle;
@@ -45,6 +45,11 @@ namespace FaissNet
         #endregion
 
         #region IO
+        /// <summary>
+        /// Load a previously saved index
+        /// </summary>
+        /// <param name="path">file path</param>
+        /// <returns></returns>
         public static Index Load(string path)
         {
             return Run<Index>(() =>
@@ -54,13 +59,19 @@ namespace FaissNet
             });
         }
 
+        /// <summary>
+        /// Save the index to disk
+        /// </summary>
+        /// <param name="path">file path</param>
         public void Save(string path)
         {
             Do(() => FN_WriteIndex(this.handle.Pointer, path));
         }
 
         #endregion
-
+        /// <summary>
+        /// Close the index and release its memory
+        /// </summary>
         public void Dispose()
         {
             this.handle.Dispose();
@@ -113,9 +124,19 @@ namespace FaissNet
         }
 
         #endregion
-
+        /// <summary>
+        /// The number of elements currently in the index
+        /// </summary>
         public Int64 Count { get { return Run<long>(() => FN_Count(this.handle.Pointer)); } }
+
+        /// <summary>
+        /// The distance metric specified at index creation time
+        /// </summary>
         public MetricType MetricType { get { return Run<MetricType>(() => FN_MetricType(this.handle.Pointer)); } }
+        
+        /// <summary>
+        /// Dimension of the index vectors, specified at index creation time
+        /// </summary>
         public int Dimension { get { return Run<int>(() => FN_Dimension(this.handle.Pointer)); } }
 
         /// <summary>
@@ -257,6 +278,7 @@ namespace FaissNet
         /// <summary>
         /// Search for the neighbors of the given vectors and also return the neighbors' vectors.
         /// May not be defined for some index types.
+        /// Returns a tuple of flat arrays: distances[n*k], neighbor ids[n*k], and neighbor vectors[n*k*dimension]
         /// </summary>
         /// <param name="n">number of input vectors</param>
         /// <param name="vectors">flat array of input vectors of size n * dimension</param>
@@ -288,6 +310,7 @@ namespace FaissNet
         }
         /// <summary>
         /// Get the vectors associated with the given ids.
+        /// Returns a flat array vectors of size ids.Length * dimension
         /// </summary>
         /// <param name="ids">array of ids</param>
         /// <returns>vectors [ids.Length * dimension]</returns>
@@ -331,10 +354,11 @@ namespace FaissNet
                 }
             });
         }
-        
+
         /// <summary>
         /// Find the ids for the given vectors
         /// May not be defined for some index types.
+        /// Returns a vector of size n containing the associated ids.
         /// </summary>
         /// <param name="n">number of training vectors</param>
         /// <param name="vectors">flat array of vectors [n * dimension]</param>
@@ -357,7 +381,11 @@ namespace FaissNet
             });
             return ids;
         }
-
+        /// <summary>
+        /// Remove the stored vectors for the given ids from the index.
+        /// May not be supported by some index types.
+        /// </summary>
+        /// <param name="ids"></param>
         public void RemoveIds(long[] ids)
         {
             Do(() =>
